@@ -1,4 +1,5 @@
 import UploadImage from "../config/cloudinary.js";
+import mongoose from "mongoose";
 import Models from "../model/index.js";
 import { EMessage, SMessage } from "../service/message.js";
 import { SendError400, SendError404, SendError500, SendSuccess } from "../service/response.js";
@@ -8,7 +9,7 @@ export default class BannerController {
   static async getOne(req, res) {
     try {
       const bannerId = req.params.bannerId;
-      if(!mongoose.Type.ObjectId.isValid(bannerId)) {
+      if(!mongoose.Types.ObjectId.isValid(bannerId)) {
         return SendError400(res, EMessage.notFound + " bannerId");
       }
       const banner = await Models.Banner.findOne({isActive: true, _id: bannerId,})
@@ -63,7 +64,7 @@ export default class BannerController {
   static async updateBanner (req, res) {
     try {
       const bannerId = req.params.bannerId;
-      if(!mongoose.Type.ObjectId.isValid(bannerId)) {
+      if(!mongoose.Types.ObjectId.isValid(bannerId)) {
         return SendError400(res, EMessage.notFound + " bannerId");
       }
       const {name, detail, oldImage, newImage} = req.body;
@@ -92,7 +93,7 @@ export default class BannerController {
   static async deleteBanner (req, res) {
     try {
       const bannerId = req.params.bannerId;
-      if(!mongoose.Type.ObjectId.isValid(bannerId)) {
+      if(!mongoose.Types.ObjectId.isValid(bannerId)) {
         return SendError400(res, EMessage.notFound + " bannerId");
       }
       const banner = await Models.Banner.findByIdAndUpdate(bannerId,{
