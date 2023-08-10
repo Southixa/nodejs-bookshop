@@ -39,7 +39,11 @@ export const ValidateCategory = (category) => {
 }
 // ---------- book --------------
 export const ValidateBook = (book) => {
-    const {name, detail, qty, order_price, sale_price} = book;
-    return ValidateData({name, detail, qty, order_price, sale_price});
+    const {name, detail, amount, order_price, sale_price} = book;
+    return ValidateData({name, detail, amount, order_price, sale_price});
+}
+export const ValidateUpdateBook = (book) => {
+    const {name, detail, amount, order_price, sale_price, oldImage} = book;
+    return ValidateData({name, detail, amount, order_price, sale_price, oldImage});
 }
 

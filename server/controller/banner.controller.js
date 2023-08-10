@@ -97,7 +97,7 @@ export default class BannerController {
         return SendError400(res, EMessage.notFound + " bannerId");
       }
       const banner = await Models.Banner.findByIdAndUpdate(bannerId,{
-        isActive: true
+        isActive: false
       },{new: true});
       return SendSuccess(res, SMessage.delete, banner);
     } catch (error) {

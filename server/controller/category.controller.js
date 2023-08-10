@@ -15,8 +15,8 @@ export default class CategoryController {
                 return SendError400(res,  EMessage.notFound + "categoryId");
             }
             const category = await Models.Category.findOne({
-                _id: categoryId,
                 isActive: true,
+                _id: categoryId,
             })
             return SendSuccess(res, SMessage.getOne, category);
         } catch (error) {

@@ -3,6 +3,7 @@ import UserController from "../controller/user.controller.js";
 import { auth, auth_admin } from "../middleware/auth.js";
 import BannerController from "../controller/banner.controller.js";
 import CategoryController from "../controller/category.controller.js";
+import BookController from "../controller/book.controller.js";
 
 const router = express.Router();
 // ------ auth --------
@@ -34,7 +35,13 @@ router.post(`${category}/insert`, auth, CategoryController.insert)
 router.put(`${category}/update/:categoryId`, auth, CategoryController.updateCategory);
 router.put(`${category}/delete/:categoryId`, auth, CategoryController.deleteCategory);
 
-
+// ---- book -------
+const book = "/book";
+router.get(`${book}/getOne/:bookId`, auth, BookController.getOne)
+router.get(`${book}/getAll`, auth, BookController.getAll)
+router.post(`${book}/insert`, auth, BookController.insert)
+router.put(`${book}/update/:bookId`, auth, BookController.updateBook);
+router.put(`${book}/delete/:bookId`, auth, BookController.deleteBook);
 
 
 
