@@ -5,7 +5,9 @@ export const SMessage = {
     update: "Update Success",
     delete: "Delete Success",
     getOne: "Get One Success",
-    getAll: "Get All Success"
+    getAll: "Get All Success",
+    search: "Search Success",
+    getByCategory: "Get By Category Success"
 }
 export const EMessage = {
     serverFaild: "Error Internall Server",
@@ -20,4 +22,10 @@ export const Role = {
     general: "general",
     admin: "admin",
     shop: "shop"
+}
+
+export const Status = {
+    process: "process",
+    success: "success",
+    cancel: "cancel"
 }

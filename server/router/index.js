@@ -4,6 +4,7 @@ import { auth, auth_admin } from "../middleware/auth.js";
 import BannerController from "../controller/banner.controller.js";
 import CategoryController from "../controller/category.controller.js";
 import BookController from "../controller/book.controller.js";
+import AddressController from "../controller/address.controller.js";
 
 const router = express.Router();
 // ------ auth --------
@@ -38,11 +39,22 @@ router.put(`${category}/delete/:categoryId`, auth, CategoryController.deleteCate
 // ---- book -------
 const book = "/book";
 router.get(`${book}/getOne/:bookId`, auth, BookController.getOne)
+router.get(`${book}/getByCategory/:categoryId`, auth, BookController.getByCategory)
+router.get(`${book}/getByCategoryLimit/:categoryId`, auth, BookController.getByCategoryLimit)
+router.get(`${book}/search`, auth, BookController.searchBook)
 router.get(`${book}/getAll`, auth, BookController.getAll)
 router.post(`${book}/insert`, auth, BookController.insert)
 router.put(`${book}/update/:bookId`, auth, BookController.updateBook);
 router.put(`${book}/delete/:bookId`, auth, BookController.deleteBook);
 
+// --- address ----
+const address = "/address";
+router.get(`${address}/getOne/:addressId`, auth, AddressController.getOne)
+router.get(`${address}/getByUser/:userId`, auth, AddressController.getByUser)
+router.get(`${address}/getAll`, auth, AddressController.getAll)
+router.post(`${address}/insert`, auth, AddressController.insert)
+router.put(`${address}/update/:addressId`, auth, AddressController.updateAddress);
+router.put(`${address}/delete/:addressId`, auth, AddressController.deleteAddress);
 
 
 export default router;

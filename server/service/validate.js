@@ -39,11 +39,21 @@ export const ValidateCategory = (category) => {
 }
 // ---------- book --------------
 export const ValidateBook = (book) => {
-    const {name, detail, amount, order_price, sale_price} = book;
-    return ValidateData({name, detail, amount, order_price, sale_price});
+    const {name, detail, amount, order_price, sale_price, category_id} = book;
+    return ValidateData({name, detail, amount, order_price, sale_price, category_id});
 }
 export const ValidateUpdateBook = (book) => {
-    const {name, detail, amount, order_price, sale_price, oldImage} = book;
-    return ValidateData({name, detail, amount, order_price, sale_price, oldImage});
+    const {name, detail, amount, order_price, sale_price, category_id, oldImage} = book;
+    return ValidateData({name, detail, amount, order_price, sale_price, category_id, oldImage});
 }
 
+// --------- address -----------
+export const ValidateAddress = (address) => {
+    const { user_id, village, district, province, latitude, longitude, phone} = address;
+    return ValidateData({user_id, village, district, province, latitude, longitude, phone});
+}
+
+export const ValidateUpdateAddress = (address) => {
+    const { village, district, province, latitude, longitude, phone} = address;
+    return ValidateData({ village, district, province, latitude, longitude, phone});
+}

@@ -2,6 +2,7 @@ import { EMessage, SMessage } from "../service/message.js";
 import {
   SendCreate,
   SendError400,
+  SendError404,
   SendError500,
   SendSuccess,
 } from "../service/response.js";
@@ -11,6 +12,70 @@ import mongoose from "mongoose";
 import UploadImage from "../config/cloudinary.js";
 
 export default class BookController {
+
+  static async getByCategory(req, res){
+    try {
+      const categoryId = req.params.categoryId;
+      if(!mongoose.Types.ObjectId.isValid(categoryId)){
+        return SendError404(res, EMessage.notFound + "category");
+      }
+      const books = await Models.Book.find({
+        category_id: categoryId,
+        isActive: true,
+      }).populate({
+        path: "category_id",
+        select: "name createAt updateAt"
+      });
+      if(!books){
+        return SendError404(res, EMessage.notFound + "books");
+      }
+      return SendSuccess(res, SMessage.getByCategory, books);
+    } catch (error) {
+      console.log(error);
+      return SendError500(res, EMessage.serverFaild, error);
+    }
+  }
+
+  static async getByCategoryLimit(req, res){
+    try {
+      const categoryId = req.params.categoryId;
+      if(!mongoose.Types.ObjectId.isValid(categoryId)){
+        return SendError404(res, EMessage.notFound + "category");
+      }
+      const books = await Models.Book.find({
+        category_id: categoryId,
+        isActive: true,
+      }).populate({
+        path: "category_id",
+        select: "name createAt updateAt"
+      }).limit(6);
+      if(!books){
+        return SendError404(res, EMessage.notFound + "books");
+      }
+      return SendSuccess(res, SMessage.getByCategory, books);
+    } catch (error) {
+      console.log(error);
+      return SendError500(res, EMessage.serverFaild, error);
+    }
+  }
+
+  static async searchBook (req, res){
+    try {
+      const search = req.query.search;
+      const books = await Models.Book.find({
+        name: {$regex: search}
+      }).populate({
+        path: "category_id",
+        select: "name createAt updateAt"
+      })
+      .limit(6)
+      return SendSuccess(res, SMessage.search, books);
+    } catch (error) {
+      console.log(error);
+      return SendError500(res, EMessage.serverFaild, error);
+    }
+  }
+
   static async getOne(req, res) {
     try {
       const bookId = req.params.bookId;
@@ -20,6 +85,9 @@ export default class BookController {
       const book = await Models.Book.findOne({
         isActive: true,
         _id: bookId,
+      }).populate({
+        path: "category_id",
+        select: "name createAt updateAt"
       });
       return SendSuccess(res, EMessage.getOne, book);
     } catch (error) {
@@ -32,6 +100,9 @@ export default class BookController {
     try {
       const book = await Models.Book.find({
         isActive: true,
+      }).populate({
+        path: "category_id",
+        select: "name createAt updateAt"
       });
       if (!book) {
         return SendError400(res, EMessage.notFound + "book");
@@ -49,9 +120,12 @@ export default class BookController {
       if (validate.length > 0) {
         return SendError400(res, EMessage.pleaseInput + validate.join(","));
       }
-      const { name, detail, amount, order_price, sale_price } = req.body;
+      const { name, detail, amount, order_price, sale_price, category_id } = req.body;
       if (!req.files.image) {
         return SendError400(res, "image is required!");
+      }
+      if(!mongoose.Types.ObjectId.isValid(category_id)){
+        return SendError400(res, EMessage.notFound + " category_id");
       }
       const image_url = await UploadImage(req.files.image.data);
       if (!image_url) {
@@ -63,6 +137,7 @@ export default class BookController {
         amount,
         order_price,
         sale_price,
+        category_id,
         image: image_url,
       });
       return SendCreate(res, SMessage.create, book);
@@ -74,7 +149,7 @@ export default class BookController {
   static async updateBook(req, res) {
     try {
       const bookId = req.params.bookId;
-      if (!bookId) {
+      if (!mongoose.Types.ObjectId.isValid(bookId)) {
         return SendError400(res, EMessage.notFound, " bookId");
       }
       const {
@@ -83,6 +158,7 @@ export default class BookController {
         amount,
         order_price,
         sale_price,
+        category_id,
         oldImage,
         newImage,
       } = req.body;
@@ -106,6 +182,7 @@ export default class BookController {
           amount,
           order_price,
           sale_price,
+          category_id,
           image: image_url,
         },
         { new: true }
